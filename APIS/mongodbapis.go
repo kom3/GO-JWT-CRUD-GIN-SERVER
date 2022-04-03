@@ -86,8 +86,14 @@ func GetEmployeeList(c *gin.Context) {
 		panic(err)
 	}
 
+	// initialising an empty array of type bson.D
 	// var rows []bson.D
+
+	// initialising an empty array of type employeeDetails
 	var rows []employeeDetails
+	// or
+	// var rows = []employeeDetails{}
+
 	fmt.Println("Cursor created in GetEmployeeList...")
 	if err = cursor.All(context.TODO(), &rows); err != nil {
 		fmt.Println("Error while fetching rows in GetEmployeeList...")
