@@ -165,7 +165,7 @@ func GetEmployeeById(c *gin.Context) {
 		response.Error.Code = 404
 		response.Error.Message = "No records found"
 		response.Results = result
-		// response.Results = []interface{}{} // this way can assign an empty array as value(for this Results node must be type of interface{} in struct GetEmployeeByIdResp )
+		// response.Results = []interface{}{} // this way we can assign an empty array as value(for this Results node must be type of interface{} in struct GetEmployeeByIdResp )
 	} else {
 		response.Error.Code = 0
 		response.Error.Message = "Success"
