@@ -142,7 +142,10 @@ func GetEmployeeById(c *gin.Context) {
 	emp_name := c.Query("name")
 	employeeCollection := dbClient.Database("testdatabase").Collection("employee")
 
-	// 	D is an ordered representation of a BSON document. This type should be used when the order of the elements matters, such as MongoDB command documents. If the order of the elements does not matter, an M should be used instead.
+	// D is an ordered representation of a BSON document.
+	// This type should be used when the order of the elements matters,
+	// such as MongoDB command documents.
+	// If the order of the elements does not matter, an M should be used instead.
 
 	// A D should not be constructed with duplicate key names, as that can cause undefined server behavior.
 
