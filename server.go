@@ -1,37 +1,45 @@
 package main
 
 import (
-	"net/http"
+	"log"
+	"os"
 
-	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 
 	// custom modules
-	"gomodules/APIS"
+	"gomodules/CommonUtils"
+	"gomodules/databaseUtils"
 )
 
-// global variables
-
-func postAPI(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, gin.H{"name": "Manju"})
-}
-
 func main() {
+	// sample mongo connection string
 	// const uri = "mongodb://user:pass@sample.host:27017/?maxPoolSize=20&w=majority"
-	const uri = "mongodb://localhost:27017/?maxPoolSize=20&w=majority"
 
-	// dbClient, ctx, cancelfunc, err := ConnectToMongoDB(uri)
-	dbClient, ctx, cancelfunc, err := APIS.ConnectToMongoDB(uri)
+	envloaderr := godotenv.Load()
+
+	uri := os.Getenv("MONGOURI")
+
+	if envloaderr != nil {
+		// panic("Unable to load ENVs" + envloaderr.Error())
+		// or
+		log.Fatal("Unable to load ENVs" + envloaderr.Error())
+	}
+
+	// calling ConnectToMongoDB from databaseUtils
+	dbClient, ctx, cancelfunc, err := databaseUtils.ConnectToMongoDB(uri)
 
 	if err != nil {
 		panic(err)
 	}
 
-	// function to close the db connection
-	defer APIS.CloseDbConnection(cancelfunc, dbClient, ctx)
+	//(defer func will be called just before the parent func(in this case main func) finishes)
+	// calling CloseDbConnection to close the db connection
+	defer databaseUtils.CloseDbConnection(cancelfunc, dbClient, ctx)
 
-	// API routes and handlers
-	router := gin.Default()
-	router.GET("/getemployeelist", APIS.GetEmployeeList)
-	router.POST("/testpost", postAPI)
-	router.Run("localhost:7777")
+	// Calling module initializer from CommonUtils
+	CommonUtils.ModuleInitializer()
+
+	// Calling router initializer from CommonUtils
+	CommonUtils.RouterInitializer()
+
 }
