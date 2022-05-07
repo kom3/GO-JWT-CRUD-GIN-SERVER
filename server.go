@@ -12,11 +12,10 @@ import (
 )
 
 func main() {
-	// sample mongo connection string
-	// const uri = "mongodb://user:pass@sample.host:27017/?maxPoolSize=20&w=majority"
 
 	envloaderr := godotenv.Load()
 
+	// reading MONGOURI from .env file
 	uri := os.Getenv("MONGOURI")
 
 	if envloaderr != nil {
