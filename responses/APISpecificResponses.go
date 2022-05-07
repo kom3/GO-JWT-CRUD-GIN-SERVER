@@ -14,3 +14,11 @@ type GetEmployeeByIdResp struct {
 type AddEmployee struct {
 	Error ErrorNode
 }
+
+type AddEmployees struct {
+	Error ErrorNode
+}
+
+type UpdateEmployee struct {
+	Error ErrorNode
+}

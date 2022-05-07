@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
+	// package for converting string to int
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -12,6 +15,7 @@ import (
 	// "go.mongodb.org/mongo-driver/bson/primitive"
 
 	// Validation package
+
 	"github.com/go-playground/validator/v10"
 
 	// custom modules
@@ -213,186 +217,179 @@ func AddEmployee(c *gin.Context) {
 }
 
 func AddEmployees(c *gin.Context) {
-	fmt.Println("GetEmployeeList...")
-
-	// harcoded data
-	// rows := []EmployeeDetails{
-	// 	{name: "Manju", age: 25, skills: "all rounder"},
-	// 	{name: "Smith", age: 25, skills: "No Skills"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// }
+	fmt.Println("AddEmployees...")
 
 	employeeCollection := dbClient.Database("testdatabase").Collection("employee")
 
-	filter := bson.D{}
+	var employees = []interface{}{} //initializing empty list of interface to store request data, note: double {}{} (for insertMany we should use interface)
+	var response responses.AddEmployees
 
-	cursor, err := employeeCollection.Find(context.TODO(), filter)
+	//validate the json data from request body against employee details model
+	if err := c.BindJSON(&employees); err != nil {
+		response.Error.Code = 1
+		response.Error.Message = "Failed to add employees, Invalid JSON data received!"
+		c.IndentedJSON(http.StatusOK, response)
+		return
+	}
+
+	//use the validator library to validate required fields
+	// try github.com/gookit/validate
+
+	//  Adding employees in to collection
+	result, err := employeeCollection.InsertMany(context.TODO(), employees)
 	if err != nil {
-		fmt.Println("Error while creating cursor in GetEmployeeList...", err)
-		panic(err)
+		response.Error.Code = 1
+		response.Error.Message = "Failed to add employees, DB insert error!"
+		c.IndentedJSON(http.StatusOK, response)
+		return
 	}
+	fmt.Println("Inserted doc Ids:", result)
 
-	// var rows []bson.D
-	var rows []EmployeeDetails
-	fmt.Println("Cursor created in GetEmployeeList...")
-	if err = cursor.All(context.TODO(), &rows); err != nil {
-		fmt.Println("Error while fetching rows in GetEmployeeList...")
-		panic(err)
-	}
+	response.Error.Code = 0
+	response.Error.Message = "Success"
 
-	for _, row := range rows {
-		fmt.Println(row)
-	}
-	c.IndentedJSON(http.StatusOK, rows)
+	c.JSON(http.StatusOK, response)
 
 }
 
 func UpdateEmployeeById(c *gin.Context) {
-	fmt.Println("GetEmployeeList...")
+	emp_name := c.Query("name")
+	fmt.Println("UpdateEmployeeById...", emp_name)
+	var should_update_with_data EmployeeDetails
+	var response responses.UpdateEmployee
+	// Store json data from request body to a variable
+	if err := c.BindJSON(&should_update_with_data); err != nil {
+		fmt.Println("Error while validating request data")
+		response.Error.Code = 1
+		response.Error.Message = "JSON Bind error, Invalid JSON received!"
+		c.JSON(http.StatusOK, response)
+		return
+	}
 
-	// harcoded data
-	// rows := []EmployeeDetails{
-	// 	{name: "Manju", age: 25, skills: "all rounder"},
-	// 	{name: "Smith", age: 25, skills: "No Skills"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// }
+	// validate the input json data
+	if validationErr := validate.Struct(&should_update_with_data); validationErr != nil {
+		fmt.Println("Error while validating request data")
+		response.Error.Code = 1
+		response.Error.Message = "JSON validation error, Invalid JSON received!"
+		c.JSON(http.StatusOK, response)
+		return
+	}
+
+	fmt.Println("Input data:", should_update_with_data)
 
 	employeeCollection := dbClient.Database("testdatabase").Collection("employee")
 
-	filter := bson.D{}
+	filter := bson.M{"name": emp_name}
 
-	cursor, err := employeeCollection.Find(context.TODO(), filter)
+	mongo_command_to_update := bson.D{{"$set", should_update_with_data}}
+	// or
+	// mongo_command_to_update := bson.M{"$set": should_update_with_data}
+
+	result, err := employeeCollection.UpdateOne(context.TODO(), filter, mongo_command_to_update)
 	if err != nil {
-		fmt.Println("Error while creating cursor in GetEmployeeList...", err)
-		panic(err)
+		response.Error.Code = 1
+		response.Error.Message = "Failed to update the employee details"
+		c.IndentedJSON(http.StatusOK, response)
+		return
 	}
 
-	// var rows []bson.D
-	var rows []EmployeeDetails
-	fmt.Println("Cursor created in GetEmployeeList...")
-	if err = cursor.All(context.TODO(), &rows); err != nil {
-		fmt.Println("Error while fetching rows in GetEmployeeList...")
-		panic(err)
-	}
+	// get updated employee datails and return as response
+	var updatedUser EmployeeDetails
 
-	for _, row := range rows {
-		fmt.Println(row)
-	}
-	c.IndentedJSON(http.StatusOK, rows)
+	filter_to_get_updated_userDet := bson.M{"name": should_update_with_data.Name}
 
+	if result.MatchedCount == 1 {
+		err := employeeCollection.FindOne(context.TODO(), filter_to_get_updated_userDet).Decode(&updatedUser)
+
+		if err == nil {
+			c.IndentedJSON(http.StatusOK, gin.H{"Error": gin.H{"code": 0}, "updatedUserData": updatedUser})
+			return
+		} else {
+			panic(err)
+		}
+
+	} else {
+		response.Error.Code = 1
+		response.Error.Message = "No match found!"
+		c.IndentedJSON(http.StatusOK, response)
+		return
+	}
 }
 
 func UpdateAllEmployees(c *gin.Context) {
-	fmt.Println("GetEmployeeList...")
+	age := c.Query("age")
+	fmt.Println("UpdateAllEmployees...", age)
+	var should_update_with_data interface{}
+	var response responses.UpdateEmployee
+	// Store json data from request body to a variable
+	if err := c.BindJSON(&should_update_with_data); err != nil {
+		fmt.Println("Error while validating request data")
+		response.Error.Code = 1
+		response.Error.Message = "JSON Bind error, Invalid JSON received!"
+		c.JSON(http.StatusOK, response)
+		return
+	}
 
-	// harcoded data
-	// rows := []EmployeeDetails{
-	// 	{name: "Manju", age: 25, skills: "all rounder"},
-	// 	{name: "Smith", age: 25, skills: "No Skills"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// }
+	fmt.Println("Input data:", should_update_with_data)
 
 	employeeCollection := dbClient.Database("testdatabase").Collection("employee")
 
-	filter := bson.D{}
+	numeric_age, _ := strconv.Atoi(age) //convert string to int (pkg: strconv)
 
-	cursor, err := employeeCollection.Find(context.TODO(), filter)
+	filter := bson.M{"age": numeric_age}
+
+	mongo_command_to_update := bson.D{{"$set", should_update_with_data}}
+	// or
+	// mongo_command_to_update := bson.M{"$set": should_update_with_data}
+
+	result, err := employeeCollection.UpdateMany(context.TODO(), filter, mongo_command_to_update)
 	if err != nil {
-		fmt.Println("Error while creating cursor in GetEmployeeList...", err)
-		panic(err)
+		fmt.Println(err)
+		response.Error.Code = 1
+		response.Error.Message = "Failed to update the employees details"
+		c.IndentedJSON(http.StatusOK, response)
+		return
 	}
 
-	// var rows []bson.D
-	var rows []EmployeeDetails
-	fmt.Println("Cursor created in GetEmployeeList...")
-	if err = cursor.All(context.TODO(), &rows); err != nil {
-		fmt.Println("Error while fetching rows in GetEmployeeList...")
-		panic(err)
-	}
-
-	for _, row := range rows {
-		fmt.Println(row)
-	}
-	c.IndentedJSON(http.StatusOK, rows)
-
+	c.IndentedJSON(http.StatusOK, gin.H{"Error": gin.H{"code": 0}, "UpdatedInfo": result})
+	return
 }
 
 func DeleteEmployeeById(c *gin.Context) {
-	fmt.Println("GetEmployeeList...")
+	emp_name := c.Query("name")
+	fmt.Println("DeleteEmployeeById...", emp_name)
 
-	// harcoded data
-	// rows := []EmployeeDetails{
-	// 	{name: "Manju", age: 25, skills: "all rounder"},
-	// 	{name: "Smith", age: 25, skills: "No Skills"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// }
+	var response responses.UpdateEmployee
 
 	employeeCollection := dbClient.Database("testdatabase").Collection("employee")
 
-	filter := bson.D{}
+	filter := bson.M{"name": emp_name}
 
-	cursor, err := employeeCollection.Find(context.TODO(), filter)
+	result, err := employeeCollection.DeleteOne(context.TODO(), filter)
 	if err != nil {
-		fmt.Println("Error while creating cursor in GetEmployeeList...", err)
-		panic(err)
+		response.Error.Code = 1
+		response.Error.Message = "Failed to delete the employee details"
+		c.IndentedJSON(http.StatusOK, response)
+		return
 	}
 
-	// var rows []bson.D
-	var rows []EmployeeDetails
-	fmt.Println("Cursor created in GetEmployeeList...")
-	if err = cursor.All(context.TODO(), &rows); err != nil {
-		fmt.Println("Error while fetching rows in GetEmployeeList...")
-		panic(err)
-	}
-
-	for _, row := range rows {
-		fmt.Println(row)
-	}
-	c.IndentedJSON(http.StatusOK, rows)
+	c.IndentedJSON(http.StatusOK, gin.H{"Error": gin.H{"code": 0}, "DeleteInfo": result})
+	return
 
 }
 
 func DeleteAllEmployees(c *gin.Context) {
-	fmt.Println("GetEmployeeList...")
-
-	// harcoded data
-	// rows := []EmployeeDetails{
-	// 	{name: "Manju", age: 25, skills: "all rounder"},
-	// 	{name: "Smith", age: 25, skills: "No Skills"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// 	{name: "John", age: 25, skills: "Rapper"},
-	// }
-
+	fmt.Println("DeleteAllEmployees...")
 	employeeCollection := dbClient.Database("testdatabase").Collection("employee")
 
-	filter := bson.D{}
+	result, err := employeeCollection.DeleteMany(context.TODO(), bson.M{})
 
-	cursor, err := employeeCollection.Find(context.TODO(), filter)
 	if err != nil {
-		fmt.Println("Error while creating cursor in GetEmployeeList...", err)
-		panic(err)
+		c.IndentedJSON(http.StatusOK, gin.H{"Error": gin.H{"code": 1, "message": "failed to delete records"}})
+		return
 	}
 
-	// var rows []bson.D
-	var rows []EmployeeDetails
-	fmt.Println("Cursor created in GetEmployeeList...")
-	if err = cursor.All(context.TODO(), &rows); err != nil {
-		fmt.Println("Error while fetching rows in GetEmployeeList...")
-		panic(err)
-	}
-
-	for _, row := range rows {
-		fmt.Println(row)
-	}
-	c.IndentedJSON(http.StatusOK, rows)
+	c.IndentedJSON(http.StatusOK, gin.H{"Error": gin.H{"code": 0}, "DeleteInfo": result})
+	return
 
 }
