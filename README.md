@@ -23,3 +23,9 @@
         Now to delete an item "b" from myslice, we can do like below
         myslice = append(myslice[:1], myslice[2:]...)
         Note**: three dots at the end(spread operator)
+        
+##### * What are the available data types in GO?
+        1. Basic type: Numbers, strings, and booleans come under this category.
+        2. Aggregate type: Array and structs come under this category.
+        3. Reference type: Pointers, slices, maps, functions, and channels come under this category.
+        4. Interface type
