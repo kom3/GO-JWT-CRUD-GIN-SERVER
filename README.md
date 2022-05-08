@@ -17,3 +17,4 @@
 
 ### Basic Tips:
 ##### * Array vs Slice: Arrays will have fixed size where as slices have a dynamic size(can use append() to add new items).
+##### * How to delete an item from slice?: we can use append() and slice operator (:) to delete an item from the slice.
