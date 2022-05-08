@@ -29,3 +29,5 @@
         2. Aggregate type: Array and structs come under this category.
         3. Reference type: Pointers, slices, maps, functions, and channels come under this category.
         4. Interface type
+
+##### * For strings we should always use double quotes("mystring"), single quotes not allowed (~~'mystring'~~).
