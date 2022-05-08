@@ -3,7 +3,7 @@
 ## This Repo consists of Go server with complete JWT, MongoDB and, MySQL CRUD APIs
 
 
-### Basic Go built in packages:
+1. ### Basic Go built in packages:
   ##### * fmt
   ##### * os        
       Ex: 
@@ -25,7 +25,9 @@
       
   ##### * strings...etc
 
-### Basic Tips:
+
+
+2. ### Basic Tips:
 ##### * Array vs Slice: Arrays will have fixed size where as slices have a dynamic size(can use append() to add new items).
 ##### * How to delete an item from slice?: we can use append() and slice operator (:) to delete an item from the slice.
         for example:
