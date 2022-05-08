@@ -10,7 +10,7 @@
   * time
   * bufio
   * strconv
-  * sort
+  * sort (available in slice not in array)
   * crypto
   * math
   * strings...etc
