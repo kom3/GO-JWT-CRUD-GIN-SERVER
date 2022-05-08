@@ -14,3 +14,6 @@
   * crypto
   * math
   * strings...etc
+
+### Basic Tips:
+##### * Array vs Slice: Arrays will have fixed size where as slices have a dynamic size(can use append() to add new items).
