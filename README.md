@@ -5,7 +5,7 @@
 
 ### Basic Go built in packages:
   * fmt
-  * os
+  * os        Ex: file, err := os.Create("path/to/file.txt");    myenv := os.Getenv("MYENV")
   * log
   * time
   * bufio
@@ -13,6 +13,8 @@
   * sort (available in slice not in array)
   * crypto
   * math
+  * io         Ex: length, err := io.WriteString("Write this line in to a file");
+  * ioutil     Ex: databytes, err := ioutil.ReadFile("./path/to/file.txt");
   * strings...etc
 
 ### Basic Tips:
