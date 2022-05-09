@@ -52,10 +52,14 @@
         }
         
         Initialization can be done like below,
+        
+        Method : 1
         var mystructobj1 mystruct{"Name":"Manju", "Age":24}
         
+        Method : 2
         var mystructobj2 mystruct{"Manju", 24}
         
+        Method : 3
         var mystructobj3 mystruct;
         mystructobj3.Name = "Manju"
         mystructobj3.Age = 24
