@@ -43,3 +43,22 @@
         4. Interface type
 
 ##### * For strings we should always use double quotes("mystring"), single quotes not allowed (~~'mystring'~~).
+
+##### * Different ways of initializig a struct in GO.
+
+        type mystruct struct{
+        Name string
+        Age int
+        }
+        
+        Initialization can be done like below,
+        var mystructobj1 mystruct{"Name":"Manju", "Age":24}
+        
+        var mystructobj2 mystruct{"Manju", 24}
+        
+        var mystructobj3 mystruct;
+        mystructobj3.Name = "Manju"
+        mystructobj3.Age = 24
+        
+        
+        
