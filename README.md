@@ -12,7 +12,7 @@
       
   ##### * log
   ##### * time
-  ##### * sync
+  ##### * sync (WaitGroups, Mutex...etc)
   ##### * bufio
   ##### * strconv
   ##### * sort (available in slice not in array)
