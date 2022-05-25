@@ -84,6 +84,7 @@
 
 ##### * Different ways of declaring/initializing variables in Go.
 
+        Example:
         package main
         
         import "fmt"
@@ -102,4 +103,25 @@
           fmt.Println("Value of c", c) // I am a string 1
           fmt.Println("Value of d", d) // I am a string 2
           fmt.Println("Value global e", e) // 200
+        }
+
+
+##### * Pointers in Go.
+        A pointer is  a variable which stores the reference of the other variable.
+        Unlike other variables that hold values of a certain type, pointer holds the address of a variable. 
+
+        Example:
+        package main
+
+        import "fmt"
+
+        func main() {
+          a := 1200
+          b := 1500
+          var ptr1 *int = &a  // we can explicitly mention the type of the pointer based on what type of variable's address it's going to store.
+          var ptr2 = &b  // type of ptr will be automatically inferred here
+          fmt.Println("Reference of variable a is", ptr1) //0xc0000140d0
+          fmt.Println("Value of variable a is", *ptr1)    //1200
+          fmt.Println("Reference of variable b is", ptr2) //0xc0000140d8
+          fmt.Println("Value of variable b is", *ptr2)    //1500
         }
