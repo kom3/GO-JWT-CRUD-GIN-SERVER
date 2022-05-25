@@ -104,6 +104,49 @@
           fmt.Println("Value of d", d) // I am a string 2
           fmt.Println("Value global e", e) // 200
         }
+        
+        
+##### * Different ways of initializing an array in Go.
+
+        It does not support sort, better to use slice. Array will be having fixed length, but slices are flexible(dynamic size)
+
+        package main
+
+        import "fmt"
+
+        func main() {
+
+          //Array of Numbers
+          var number_array = [4]int32{}
+          fmt.Println("Array is", number_array) // Array is [0 0 0 0]
+          
+          //(integer/float array default intializes all elements to zero)
+          number_array[0] = 1 //skipping arr[1], so by default it will be initialized to 0
+          number_array[2] = 2
+          number_array[3] = 3
+          fmt.Println("Array is", number_array) //Array is [1 0 2 3]
+
+          //Array of Strings
+          var strings_array = [4]string{}
+          fmt.Println("Array is", strings_array) // Array is Array is [   ] (all elements are empty strings)
+          
+          //(string array default intializes all elements to empty string)
+          strings_array[0] = "one" //skipping arr[1], so by default it will be initialized to ""(empty string)
+          strings_array[2] = "two"
+          strings_array[3] = "three"
+          fmt.Println("Array is", strings_array) //Array is [one  two three]
+          
+          // Direct initialization
+          var directly_initialized_array = [3]int{1, 2, 3}
+	        fmt.Println("directly_initialized_array is", directly_initialized_array)
+          
+          
+          // length of an array is always equals to the value given at the time of initialization irrespective of 
+          // the number of elements it contains
+          var my_new_array = [4]int{1, 2}  // initializing only two elemets but still lenght will be 4
+          fmt.Println("length of my_new_array is", len(my_new_array)) //length of my_new_array is 4
+  
+        }
 
 
 ##### * Pointers in Go.
