@@ -223,3 +223,60 @@
           fmt.Println("New value of variable b is", b)    //1502
           fmt.Println("New value of variable b is", *ptr2)    //1502
         }
+	
+	
+	
+##### * Methods in Go.
+
+	package main
+
+	import "fmt"
+
+	type UserDetails struct {
+		Name    string
+		Address string
+		Phone   int64
+	}
+
+	func main() {
+
+		var userDetailsObject = UserDetails{"Manjunath", "Karnataka", 10101010101}
+		fmt.Println("Name: ", userDetailsObject.Name)       // Name:  Manjunath
+		fmt.Println("Address: ", userDetailsObject.Address) // Address:  Karnataka
+		fmt.Println("Phone: ", userDetailsObject.Phone)     // Phone:  10101010101
+
+		// Calling method GetPhone using object userDetailsObject
+		userDetailsObject.GetPhone() // Your phone is:  10101010101
+
+		// Calling method SetPhone using object userDetailsObject
+		userDetailsObject.SetPhone(111111111111)
+		userDetailsObject.GetPhone() // Your phone is:  10101010101
+
+		// ***  But here is a interesting fact ***
+		// above orginal value of Phone is not modified(because in function, 
+		// received parameters will be the copies of the original values),
+		// this is where pointer comes to our rescue
+
+		// To modify the original value we need to either pass the reference of the property or
+		// recieve the value as a pointer(have a look at 'SetPhoneWithPointer' mthod)
+		userDetailsObject.SetPhoneWithPointer(12345678) //Your phone permanently updated to:  12345678
+		userDetailsObject.GetPhone() // Your phone is:  12345678
+
+	}
+
+	// Methods in Go lang(similar to getter and setter in Javascript),  should be outside main(Golang does not support nested function declarations ***)
+	func (ud UserDetails) GetPhone() {
+		fmt.Println("Your phone is: ", ud.Phone)
+	}
+
+	func (ud UserDetails) SetPhone(phone int64) {
+		ud.Phone = phone
+		fmt.Println("Your phone updated to: ", ud.Phone)
+	}
+
+	func (ud *UserDetails) SetPhoneWithPointer(phone int64) {
+		ud.Phone = phone
+		// ud.Phone = phone
+		fmt.Println("Your phone permanently updated to: ", ud.Phone)
+	}
+
