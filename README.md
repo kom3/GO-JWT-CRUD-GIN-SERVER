@@ -108,7 +108,8 @@
         
 ##### * Different ways of initializing an array in Go.
 
-        It does not support sort, better to use slice. Array will be having fixed length, but slices are flexible(dynamic size)
+        It does not support sort, better to use slice. Array will be having fixed length, but slices 
+	are flexible(dynamic size)
 
         package main
 
