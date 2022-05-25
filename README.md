@@ -264,7 +264,9 @@
 
 	}
 
-	// Methods in Go lang(similar to getter and setter in Javascript),  should be outside main(Golang does not support nested function declarations ***)
+	// Methods in Go lang(similar to getter and setter in Javascript),  
+	//should be outside main(*** Golang does not support nested function declarations ***)
+	
 	func (ud UserDetails) GetPhone() {
 		fmt.Println("Your phone is: ", ud.Phone)
 	}
