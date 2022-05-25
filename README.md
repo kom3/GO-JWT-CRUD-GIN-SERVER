@@ -47,8 +47,8 @@
 ##### * Different ways of initializig a struct in GO.
 
         type mystruct struct{
-        Name string
-        Age int
+		Name string
+		Age int
         }
         
         Initialization can be done like below,
