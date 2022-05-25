@@ -66,3 +66,40 @@
         
         
         
+##### * Conflict between Global and Local variable
+        We can redeclare same variable within the function, and which will dominate 
+        within the function.
+
+        The scoping closest to the use is what decides the value of variable. 
+        So if you redeclare the variable inside your function, then for the 
+        duration of that function you will have the value value assigned within the function.
+
+        If you chose to use the same name for two things, 
+        the consequence is that the inner name will always dominate.
+        If you need both values then name the variables differently. same happens in other programming
+        languages like Javascript and Python.
+       
+       
+
+
+##### * Different ways of declaring/initializing variables in Go.
+
+        package main
+        
+        import "fmt"
+        
+        var e int8
+
+        func main() {
+          e = 200 //global
+          var a int8
+          a = 10
+          b := 20
+          var c = "I am a string 1"
+          var d string = "I am a string 2"
+          fmt.Println("Value of a", a) // 10
+          fmt.Println("Value of b", b) // 20
+          fmt.Println("Value of c", c) // I am a string 1
+          fmt.Println("Value of d", d) // I am a string 2
+          fmt.Println("Value global e", e) // 200
+        }
