@@ -118,7 +118,9 @@
         func main() {
           a := 1200
           b := 1500
-          var ptr1 *int = &a  // we can explicitly mention the type of the pointer based on what type of variable's address it's going to store.
+          var ptr1 *int = &a  // we can explicitly mention the type of the pointer based on 
+                              // what type of variable's address it's going to store. in our case
+                              // it's storing the address of the variable which is of type int. so it will be *int
           var ptr2 = &b  // type of ptr will be automatically inferred here
           fmt.Println("Reference of variable a is", ptr1) //0xc0000140d0
           fmt.Println("Value of variable a is", *ptr1)    //1200
