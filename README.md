@@ -258,7 +258,7 @@
 		// this is where pointer comes to our rescue
 
 		// To modify the original value we need to either pass the reference of the property or
-		// recieve the value as a pointer(have a look at 'SetPhoneWithPointer' mthod)
+		// recieve the value as a pointer(have a look at 'SetPhoneWithPointer' method)
 		userDetailsObject.SetPhoneWithPointer(12345678) //Your phone permanently updated to:  12345678
 		userDetailsObject.GetPhone() // Your phone is:  12345678
 
