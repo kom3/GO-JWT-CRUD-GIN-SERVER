@@ -12,6 +12,7 @@
       
   ##### * log
   ##### * time
+  ##### * sync
   ##### * bufio
   ##### * strconv
   ##### * sort (available in slice not in array)
