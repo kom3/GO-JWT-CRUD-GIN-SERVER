@@ -110,7 +110,8 @@
 
         It does not support sort, better to use slice. Array will be having fixed length, but slices 
         are flexible(dynamic size)
-
+	
+	Example:
         package main
 
         import "fmt"
@@ -120,7 +121,7 @@
           //Array of Numbers
           var number_array = [4]int32{}
           fmt.Println("Array is", number_array) // Array is [0 0 0 0]
-	  fmt.Printf("Type of number_array is %T\n", number_array) //Type of number_array is [4]int32
+          fmt.Printf("Type of number_array is %T\n", number_array) //Type of number_array is [4]int32
           
           //(integer/float array default intializes all elements to zero)
           number_array[0] = 1 //skipping arr[1], so by default it will be initialized to 0
@@ -153,6 +154,8 @@
 	
 ##### * Slices in Go.
 	Slice will be having the same syntax like array but with empty brackets(no size will be mentioned)
+	
+	Example:
 	package main
 
 	import "fmt"
