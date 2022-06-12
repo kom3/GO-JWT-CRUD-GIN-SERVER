@@ -35,7 +35,7 @@ func main() {
 	// calling CloseDbConnection to close the db connection
 	defer databaseUtils.CloseDbConnection(cancelfunc, dbClient, ctx)
 
-	// Calling module initializer from CommonUtils
+	// Calling module initializer from CommonUtils (module initializer calls module wise init functions)
 	CommonUtils.ModuleInitializer()
 
 	// Calling router initializer from CommonUtils

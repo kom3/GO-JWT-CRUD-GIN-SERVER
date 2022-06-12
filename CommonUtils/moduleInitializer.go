@@ -8,7 +8,7 @@ import (
 func ModuleInitializer() {
 	fmt.Printf("\n----Module Initialization Starts----\n\n\n")
 
-	// New module inits can be added below
+	// New module inits can be added below(calling module wise init functions)
 
 	CRUDAPIS.Init() //initializes mongodb connection objet
 
